@@ -3,12 +3,15 @@ require 'httparty'
 module SoRepute
   class Base
   	def initialize(user_id, app_key=nil)
-   	  url =  "https://api.stackexchange.com/users/#{user_id.to_s}/?site=stackoverflow" + (app_key.nil? ? "" : "&key=#{app_key}")      
-      user = HTTParty.get(url).parsed_response
-      if user.keys.include?("error_id")
+      user_info = HTTParty.get("https://api.stackexchange.com/users/#{user_id.to_s}/?site=stackoverflow" + (app_key.nil? ? "" : "&key=#{app_key}")).parsed_response
+      user_answers = HTTParty.get("https://api.stackexchange.com/users/#{user_id.to_s}/answers/?site=stackoverflow" + (app_key.nil? ? "" : "&key=#{app_key}")).parsed_response
+      user_questions = HTTParty.get("https://api.stackexchange.com/users/#{user_id.to_s}/questions/?site=stackoverflow" + (app_key.nil? ? "" : "&key=#{app_key}")).parsed_response
+      if user_info.keys.include?("error_id")
       	raise "Incorrect user_id or app_key"
       else
-      	@user_info = user["items"][0]
+      	@user_info = user_info["items"][0]
+      	@user_answers = user_answers["items"]
+      	@user_questions = user_questions["items"]
       end
   	end
 
@@ -32,6 +35,8 @@ module SoRepute
   	  @user_info["reputation_change_day"]
   	end
     
-    def 
+    def total_answers
+      @user_answers.length
+    end 
   end
 end
