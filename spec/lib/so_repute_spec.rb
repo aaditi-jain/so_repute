@@ -1,12 +1,14 @@
 require 'spec_helper'
 require 'httparty'
+require 'nokogiri'
+require 'open-uri'
 
 describe SoRepute do
 	before (:all) do  	   	
     @user = SoRepute::Base.new(2440312, "BgnaQ2fdzYqqWRX1RQvxog((")
     @required_user_info = HTTParty.get("http://api.stackexchange.com/users/2440312/?site=stackoverflow&key=BgnaQ2fdzYqqWRX1RQvxog((").parsed_response["items"][0]
     @required_user_answers = HTTParty.get("http://api.stackexchange.com/users/2440312/answers/?site=stackoverflow&filter=!9YdnSQVoS&pagesize=100&page=1&key=BgnaQ2fdzYqqWRX1RQvxog((").parsed_response
-    @required_user_answers = HTTParty.get("http://api.stackexchange.com/users/2440312/questions/?site=stackoverflow&filter=!9YdnSQVoS&pagesize=100&page=1&key=BgnaQ2fdzYqqWRX1RQvxog((").parsed_response
+    @required_user_questions = HTTParty.get("http://api.stackexchange.com/users/2440312/questions/?site=stackoverflow&filter=!9YdnSQVoS&pagesize=100&page=1&key=BgnaQ2fdzYqqWRX1RQvxog((").parsed_response
   end
 
   describe '#reputation' do 
@@ -49,4 +51,17 @@ describe SoRepute do
       	                     })
     end
   end
+
+  describe '#total_answers'do
+    it 'should output total number of answers given by the user' do
+      @user.total_answers.should eq(@required_user_answers["total"])
+    end
+  end
+  
+  describe '#total_questions'do
+    it 'should output total number of questions given by the user' do
+      @user.total_questions.should eq(@required_user_questions["total"])
+    end
+  end 
+
 end
