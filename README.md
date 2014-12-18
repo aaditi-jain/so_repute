@@ -1,24 +1,66 @@
-# SoRepute
+# SoRepute 
 
-TODO: Write a gem description
+  Fetches StackOverflow information of a person from his/her stackoverflow user_id
 
 ## Installation
 
 Add this line to your application's Gemfile:
-
-    gem 'so_repute'
+  `gem 'so_repute'`
 
 And then execute:
-
-    $ bundle
+  `$ bundle`
 
 Or install it yourself as:
-
-    $ gem install so_repute
+  `$ gem install so_repute`
 
 ## Usage
+  It is advisable to register your application in at stackapps when using this gem(which inturn uses stackexchange API). This allows you a larger per-day request quota than using the API anonymously. Use this link to register your application at stackapps https://stackapps.com/apps/oauth/register
 
-TODO: Write usage instructions here
+  **require 'so_repute'**
+
+  **user = SoRepute::Base.new(user_id, app_key)**
+
+  1) **user.reputation**
+
+  #returns current total reputation of the user.
+
+  2) **user.reputation_change_quarter**
+
+  #returns users reputation gained in the current quarter
+
+  3) **user.reputation_change_month**
+
+  #returns users reputation gained in the current month
+
+
+  4) **user.reputation_change_week**
+
+  #returns users reputation gained in the current week
+  
+
+  5) **user.reputation_change_day**
+
+  #returns users reputation gained today(UTC) 
+  
+  6) **user.badges**
+
+  #Returns a array with count of each type of badge as well as total number of badges of a user in a format as follows: {bronze: 12, silver: 4, gold: 4, total: 20}
+  
+
+  7) **user.total_answers**
+
+  #returns total number of answers answered by a user.
+  
+    
+  8) **user.total_questions**
+
+  #returns total number of questions asked by a user.
+  
+  
+  9) **user.accepted_answers**
+
+  #returns totalnumber of answers by the user that were accepted as correct answer.
+  
 
 ## Contributing
 
