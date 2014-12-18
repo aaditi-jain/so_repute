@@ -9,6 +9,7 @@ describe SoRepute do
     @required_user_info = HTTParty.get("https://api.stackexchange.com/users/2440312/?site=stackoverflow&key=BgnaQ2fdzYqqWRX1RQvxog((").parsed_response["items"][0]
     @required_user_answers = HTTParty.get("https://api.stackexchange.com/users/2440312/answers/?site=stackoverflow&filter=!9YdnSQVoS&pagesize=100&page=1&key=BgnaQ2fdzYqqWRX1RQvxog((").parsed_response
     @required_user_questions = HTTParty.get("https://api.stackexchange.com/users/2440312/questions/?site=stackoverflow&filter=!9YdnSQVoS&pagesize=100&page=1&key=BgnaQ2fdzYqqWRX1RQvxog((").parsed_response
+
   end
 
   describe '#reputation' do 
@@ -71,5 +72,4 @@ describe SoRepute do
       @user.accepted_answers.should eq(required_result)
     end
   end   
-
 end

@@ -13,7 +13,7 @@ module SoRepute
       else
       	@user_info = user_info["items"][0]
       	@user_answers = HTTParty.get("https://api.stackexchange.com/users/#{@user_id}/answers/?site=stackoverflow&pagesize=100&filter=!9YdnSQVoS&page=1" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response
-      	@user_questions = user_questions = HTTParty.get("https://api.stackexchange.com/users/#{@user_id}/questions/?site=stackoverflow&filter=!9YdnSQVoS&pagesize=100&page=1" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response
+      	@user_questions = HTTParty.get("https://api.stackexchange.com/users/#{@user_id}/questions/?site=stackoverflow&filter=!9YdnSQVoS&pagesize=100&page=1" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response
       end
   	end
 
@@ -52,6 +52,7 @@ module SoRepute
     def accepted_answers   
       @search_page = Nokogiri::HTML(open("https://stackoverflow.com/search?q=user%3A#{@user_id}+isaccepted%3Ayes"))  
       @search_page.css('div.results-header > h2').first.text.delete(",results").strip.to_i
+
     end
 
     def total_questions

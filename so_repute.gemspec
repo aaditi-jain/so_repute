@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   
+
   spec.add_runtime_dependency "nokogiri", "~> 1.6.5"
   spec.add_runtime_dependency "httparty", "~> 0.13.3"
 end
