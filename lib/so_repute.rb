@@ -44,22 +44,24 @@ module SoRepute
     end
     
     def total_answers
-      @user_answers[:total]
+      @user_answers["total"]
     end 
 
-    def accepted_answers  
+    def accepted_answers        
       i = 1
+      accepted_answers = count_accepted_answers(@user_answers)
+      return accepted_answers if (@user_answers["has_more"] == false)      
       user_answers = @user_answers
-      until (user_answers["has_more"] == false and i != 1) do
-        accepted_answers+= count_accepted_answers(user_answers)
-        i +=1
-        user_answers =  HTTParty.get("https://api.stackexchange.com/users/#{@user_id}/answers/?site=stackoverflow&pagesize=100&filter=!9YdnSQVoS&page=#{i}" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response              
+      while (user_answers["has_more"] == true) do
+        i+= 1
+        user_answers =  HTTParty.get("http://api.stackexchange.com/users/#{@user_id}/answers/?site=stackoverflow&pagesize=100&filter=!9YdnSQVoS&page=#{i}" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response              
+        accepted_answers+= count_accepted_answers(user_answers)        
       end     
       accepted_answers       
     end
 
     def total_questions
-      @user_questions[:total]
+      @user_questions["total"]
     end
 
 
