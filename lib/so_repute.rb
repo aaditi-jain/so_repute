@@ -1,17 +1,19 @@
 require "so_repute/version"
 require 'httparty'
+require 'nokogiri'
+require 'open-uri'
 module SoRepute
   class Base
   	def initialize(user_id, app_key=nil)
       @user_id = user_id
       @app_key = app_key
-      user_info = HTTParty.get("http://api.stackexchange.com/users/#{@user_id}/?site=stackoverflow" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response      
+      user_info = HTTParty.get("https://api.stackexchange.com/users/#{@user_id}/?site=stackoverflow&key=#{@app_key}").parsed_response      
       if user_info.keys.include?("error_id")
-      	raise "Incorrect user_id or app_key"
+      	raise ((user_info["error_name"] == "throttle_violation") ? "Number Of Requests exceeded the daily quota of #{@app_key.nil? ? 300 : 10000}" : "Incorrect user_id or app_key")
       else
       	@user_info = user_info["items"][0]
-      	@user_answers = HTTParty.get("http://api.stackexchange.com/users/#{@user_id}/answers/?site=stackoverflow&pagesize=100&filter=!9YdnSQVoS&page=1" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response
-      	@user_questions = user_questions = HTTParty.get("http://api.stackexchange.com/users/#{@user_id}/questions/?site=stackoverflow&filter=!9YdnSQVoS&pagesize=100&page=1" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response
+      	@user_answers = HTTParty.get("https://api.stackexchange.com/users/#{@user_id}/answers/?site=stackoverflow&pagesize=100&filter=!9YdnSQVoS&page=1" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response
+      	@user_questions = user_questions = HTTParty.get("https://api.stackexchange.com/users/#{@user_id}/questions/?site=stackoverflow&filter=!9YdnSQVoS&pagesize=100&page=1" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response
       end
   	end
 
@@ -47,30 +49,14 @@ module SoRepute
       @user_answers["total"]
     end 
 
-    def accepted_answers        
-      i = 1
-      accepted_answers = count_accepted_answers(@user_answers)
-      return accepted_answers if (@user_answers["has_more"] == false)      
-      user_answers = @user_answers
-      while (user_answers["has_more"] == true) do
-        i+= 1
-        user_answers =  HTTParty.get("http://api.stackexchange.com/users/#{@user_id}/answers/?site=stackoverflow&pagesize=100&filter=!9YdnSQVoS&page=#{i}" + (@app_key.nil? ? "" : "&key=#{@app_key}")).parsed_response              
-        accepted_answers+= count_accepted_answers(user_answers)        
-      end     
-      accepted_answers       
+    def accepted_answers   
+      @search_page = Nokogiri::HTML(open("https://stackoverflow.com/search?q=user%3A#{@user_id}+isaccepted%3Ayes"))  
+      @search_page.css('div.results-header > h2').first.text.delete(",results").strip.to_i
     end
 
     def total_questions
       @user_questions["total"]
     end
-
-
-    private
-      def count_accepted_answers(user_answers)
-        accepted_answers = 0
-        user_answers["items"].each{|ans| accepted_answers += 1 if (ans["is_accepted"] == true)}
-        accepted_answers
-      end
 
   end
 end
