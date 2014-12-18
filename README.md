@@ -20,8 +20,8 @@ Or install it yourself as:
   **require 'so_repute'**
 
   **user = SoRepute::Base.new(user_id, app_key)**
-  
-  #app_key is obtained when you register your app at stackapps. Registering your app alows you a larger number of hit-quota per day. If you do not want to register your app, do : oRepute::Base.new(user_id)
+
+  #app_key is obtained when you register your app at stackapps. Registering your app alows you a larger number of hit-quota per day. If you do not want to register your app, do : SoRepute::Base.new(user_id)
 
   1) **user.reputation**
 
