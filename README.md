@@ -4,7 +4,7 @@
 
 ## Installation
 
-  ** It is advisable to register your application in at stackapps when using this gem (which inturn uses stackexchange API). Use this link to register your application at stackapps https://stackapps.com/apps/oauth/register**
+  **It is advisable to register your application in at stackapps when using this gem (which inturn uses stackexchange API). Use this link to register your application at stackapps https://stackapps.com/apps/oauth/register**
 
 Add this line to your application's Gemfile:
   `gem 'so_repute'`
@@ -20,6 +20,7 @@ Or install it yourself as:
   **require 'so_repute'**
 
   **user = SoRepute::Base.new(user_id, app_key)**
+  
   #app_key is obtained when you register your app at stackapps. Registering your app alows you a larger number of hit-quota per day. If you do not want to register your app, do : oRepute::Base.new(user_id)
 
   1) **user.reputation**
