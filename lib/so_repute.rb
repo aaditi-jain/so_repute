@@ -52,7 +52,6 @@ module SoRepute
     def accepted_answers   
       @search_page = Nokogiri::HTML(open("https://stackoverflow.com/search?q=user%3A#{@user_id}+isaccepted%3Ayes"))  
       @search_page.css('div.results-header > h2').first.text.delete(",results").strip.to_i
-
     end
 
     def total_questions
